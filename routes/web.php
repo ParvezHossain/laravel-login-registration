@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\RegisterController;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 
@@ -14,34 +17,24 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::group(['namespace' => 'App\http\Controllers'], function(){
-    /**
-     * Home Routes
-     */
-
-     Route::get('/', 'HomeController@index')->name('home.index');
-
-     Route::group(['middleware' => ['guest']], function(){
-        /**
-         * Register Routes
-         */
-        Route::get('/register', 'RegisterController@show')->name('register.show');
-        Route::post('/register', 'RegisterController@register')->name('register.perfom');
-
-         /**
-         * Login Routes
-         */
-        Route::get('/login', 'LoginController@show')->name('login.show');
-        Route::post('/login', 'LoginController@login')->name('login.perform');
-     });
-
-     Route::group(['middleware' => ['auth']], function() {
-        /**
-         * Logout Routes
-         */
-        Route::get('/logout', 'LogoutController@perform')->name('logout.perform');
-    });
-
+Route::controller(HomeController::class)->group(function(){
+    Route::get('/', 'index');
 });
 
+Route::group(['middleware' => ['guest']], function(){
+    Route::controller(RegisterController::class)->group(function(){
+        Route::get('/register', 'show')->name('register.show');
+        Route::post('/register', 'register')->name('register.perform');
+    });
+    Route::controller(LoginController::class)->group(function(){
+        Route::get('/login', 'show')->name('login.show');
+        Route::post('login', 'login')->name('login.perform');
+    });
+});
+
+
+Route::group(['middleware' => ['auth']], function(){
+    Route::controller(LogoutController::class)->group(function(){
+        Route::get('/logout', 'perform')->name('logout.perform');
+    });
+});
