@@ -25,9 +25,11 @@
                 <span class="text-danger text-left">{{ $errors->first('password') }}</span>
             @endif
         </div>
-
         <button class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
-        
-        @include('auth.partials.copy')
     </form>
+    <br>
+    <form method="get" action="{{ route('password.request') }}">
+        <button class="w-100 btn btn-lg btn-warning" type="submit">Reset Password</button>
+    </form>
+    @include('auth.partials.copy')
 @endsection
