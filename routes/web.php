@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\FlightController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Hash;
@@ -32,7 +34,7 @@ Route::group(['middleware' => ['guest']], function(){
     });
     Route::controller(LoginController::class)->group(function(){
         Route::get('/login', 'show')->name('login.show');
-        Route::post('login', 'login')->name('login.perform');
+        Route::post('/login', 'login')->name('login.perform');
     });
 
     Route::get('/forget-password', function(){
@@ -64,7 +66,6 @@ Route::group(['middleware' => ['guest']], function(){
                 ])->setRememberToken(Str::random(60));
             }
         );
-
         return $status === Password::PASSWORD_RESET ? redirect()->route('login')->with('status', __($status)) : back()->withErrors(['email' => [__($status)]]);
     })->name('password.update');
 
@@ -74,6 +75,13 @@ Route::group(['middleware' => ['guest']], function(){
 Route::group(['middleware' => ['auth']], function(){
     Route::controller(LogoutController::class)->group(function(){
         Route::get('/logout', 'perform')->name('logout.perform');
+    });
+    Route::controller(UserController::class)->group(function(){
+        Route::get('/user-list', 'index');
+    });
+    Route::controller(FlightController::class)->group(function(){
+        // Route::get('/flights', 'index')->middleware('isAdmin');
+        Route::get('/flights', 'index');
     });
 });
 
