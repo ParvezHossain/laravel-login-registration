@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-
+use Faker\Generator as Faker;
 class InsertUserEveryMinute extends Command
 {
     /**
@@ -31,13 +31,15 @@ class InsertUserEveryMinute extends Command
      *
      * @return int
      */
-    public function handle()
+    public function handle(Faker $faker)
     {
         // return Command::SUCCESS;
-        DB::table('flights')->insert([
-            'title' => fake()->sentence(),
-            'source' => fake()->city(),
-            'destination' => fake()->city(),
+        DB::table('users')->insert([
+            'name' => $faker->name,
+            'username' => $faker->name,
+            'email' => $faker->unique()->safeEmail,
+            'password' => bcrypt("123456789"),
+            'created_at' => date("Y-m-d h:i:s"),
         ]);
     }
 }

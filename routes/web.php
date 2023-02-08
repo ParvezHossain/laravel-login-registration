@@ -4,6 +4,7 @@ use App\Http\Controllers\FlightController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
+use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -25,6 +26,11 @@ use Illuminate\Support\Str;
 */
 Route::controller(HomeController::class)->group(function(){
     Route::get('/', 'index');
+});
+
+Route::controller(NewsletterController::class)->group(function(){
+    Route::get('/newsletter', 'index')->name('newsletter');
+    Route::post('/newsletter', 'subscribe')->name('newsletter.store');
 });
 
 Route::group(['middleware' => ['guest']], function(){
@@ -68,6 +74,8 @@ Route::group(['middleware' => ['guest']], function(){
         );
         return $status === Password::PASSWORD_RESET ? redirect()->route('login')->with('status', __($status)) : back()->withErrors(['email' => [__($status)]]);
     })->name('password.update');
+
+    
 
 });
 

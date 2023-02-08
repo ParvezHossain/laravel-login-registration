@@ -1,0 +1,1 @@
+<h1>You have been subscribe Laravel App.</h1>
